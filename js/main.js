@@ -675,9 +675,7 @@ function mainMenu(obj) {
 
       menu.addEventListener('keydown', (e) => {
         const checkHasSubmenu = e.target.parentNode.classList.contains('hasChild');
-        const lastTarget = [...e.target.closest('ul').querySelectorAll('a,button,input,textarea,select')].at(-1);
-        console.log(_jsParents(e.target, 'li'));
-
+        const lastTarget = _jsParents(e.target, '.hasChild')[0] !== undefined && [..._jsParents(e.target, '.hasChild')[0].querySelectorAll('a,button,input,textarea,select')].at(-1);
         _checkBorder(e.target.parentNode);
         if (window.outerWidth <= setRWDWidth) return;
 
