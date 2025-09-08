@@ -218,7 +218,7 @@ function _jsFadeToggle(element, time = 200) {
 // })
 
 function _toggleDropdown(elem, con, autoClose = true) {
-  const body = document.querySelector('body');
+  const body = document.body;
   const targetSelect = document.querySelector(elem);
   const targetSelectCon = document.querySelector(con);
   if (!targetSelectCon) return;
@@ -448,7 +448,7 @@ function _changeTag(oldTag, newTag) {
 // -----------------------------------------------------------------------
 
 function FontSize() {
-  const body = document.querySelector('body');
+  const body = document.body;
   // 更新按鈕狀態與目標區域的字體 class
   function _updateView(buttons, target, activeClassName) {
     const sizeClasses = ['smallSize', 'mediumSize', 'largeSize'];
@@ -540,7 +540,7 @@ function mainMenu(obj) {
     document.body.insertAdjacentElement('afterbegin', overlay);
   }
 
-  const body = document.querySelector('body');
+  const body = document.body;
   const header = document.querySelector('header');
   const headTop = document.querySelector('.headTop');
   const { sticky = true, needLink = false, mega = false } = obj;
@@ -570,7 +570,7 @@ function mainMenu(obj) {
     const objectRect = hasChildLi[0].getBoundingClientRect();
 
     // 如果第一層左邊 + 其他層寬度超過視窗的寬度，則新增leftSlider
-    if (window.outerWidth < objectRect.left + checkUlWidth) {
+    if (window.innerWidth < objectRect.left + checkUlWidth) {
       hasChildLi[0].classList.add('leftSlider');
     } else {
       hasChildLi[0].classList.remove('leftSlider');
@@ -636,7 +636,7 @@ function mainMenu(obj) {
         const headerMargin = parseInt(window.getComputedStyle(header).marginBottom.replace('px', ''));
 
         window.addEventListener('scroll', function () {
-          if (window.outerWidth > setRWDWidth) {
+          if (window.innerWidth > setRWDWidth) {
             if (headTop.clientHeight < window.scrollY) {
               header.classList.add('sticky');
               headTop.style.marginBottom = `${headerMargin + mainMenu.clientHeight}px`;
@@ -677,7 +677,7 @@ function mainMenu(obj) {
         const checkHasSubmenu = e.target.parentNode.classList.contains('hasChild');
         const lastTarget = _jsParents(e.target, '.hasChild')[0] !== undefined && [..._jsParents(e.target, '.hasChild')[0].querySelectorAll('a,button,input,textarea,select')].at(-1);
         _checkBorder(e.target.parentNode);
-        if (window.outerWidth <= setRWDWidth) return;
+        if (window.innerWidth <= setRWDWidth) return;
 
         if (e.code === 'Tab' && !e.shiftKey) {
           const siblings = [...e.target.parentNode.parentNode.children].filter((child) => child !== e.target.parentNode);
@@ -777,7 +777,7 @@ function mainMenu(obj) {
         mobileMenu.classList.add('open');
       }, 0);
       mobileMainMenuBtn.classList.add('active');
-      if (window.outerWidth < setRWDWidth) body.classList.add('noscroll');
+      if (window.innerWidth < setRWDWidth) body.classList.add('noscroll');
       _jsFadeIn(overlay);
       overlay.style.zIndex = '90';
     }
@@ -877,7 +877,7 @@ function mainMenu(obj) {
     });
 
     window.addEventListener('resize', function () {
-      if (window.outerWidth <= setRWDWidth) {
+      if (window.innerWidth <= setRWDWidth) {
         headTop.removeAttribute('style');
       } else {
         body.classList.remove('noscroll');
@@ -905,7 +905,7 @@ function webSearch() {
     document.body.insertAdjacentElement('afterbegin', overlay);
   }
 
-  const body = document.querySelector('body');
+  const body = document.body;
   const webSearch = document.querySelector('.webSearch');
 
   if (!webSearch) return;
@@ -934,19 +934,22 @@ function webSearch() {
     mobileSearchBtn.setAttribute('aria-pressed', 'false');
     mobileSearchBtn.setAttribute('aria-haspopup', 'true');
     mobileSearchBtn.addEventListener('click', () => _toggleContent(mobileSearchBtn));
+    webSearch.setAttribute('aria-labelledby', `topSearchBtn mobileSearchBtn`);
+
+    window.addEventListener('resize', () => window.innerWidth > setRWDWidth && webSearch.removeAttribute('style'));
+  } else {
+    webSearch.setAttribute('aria-labelledby', `mobileSearchBtn`);
   }
 
   // 搜尋內容區塊設定 ARIA 標記，建立與觸發按鈕的關聯
   webSearch.setAttribute('id', `${id}_con`);
-  webSearch.setAttribute('aria-labelledby', `topSearchBtn mobileSearchBtn`);
 
   //  切換搜尋展開/關閉的函式
   function _toggleContent(elem) {
     const checkDisplay = window.getComputedStyle(webSearch).display === 'none';
-
     if (checkDisplay) {
       _showSearchBox(elem);
-      if (window.outerWidth < setRWDWidth) body.classList.add('noscroll');
+      if (window.innerWidth < setRWDWidth) body.classList.add('noscroll');
     } else {
       _hideSearchBox(elem);
       body.classList.remove('noscroll');
@@ -963,7 +966,7 @@ function webSearch() {
       if (webSearchAllTarget[0]) webSearchAllTarget[0].focus();
     });
     _jsSlideDown(webSearch);
-    window.outerWidth < setRWDWidth ? _jsFadeIn(overlay) : null;
+    window.innerWidth < setRWDWidth ? _jsFadeIn(overlay) : null;
   }
 
   function _hideSearchBox(elem, overLayFn = true) {
@@ -983,12 +986,12 @@ function webSearch() {
   // 鍵盤事件設定，支援 Tab、Enter、Alt+S 快捷鍵以及 Escape 關閉
   body.addEventListener('keydown', (e) => {
     const isSearchBtn = e.target === webSearchBtn || e.target === mobileSearchBtn;
-    const searchBtn = window.outerWidth >= setRWDWidth ? webSearchBtn : mobileSearchBtn;
+    const searchBtn = window.innerWidth >= setRWDWidth ? webSearchBtn : mobileSearchBtn;
     const lastTarget = [...webSearchAllTarget].at(-1);
 
     // Tab
     if (e.code === 'Tab') {
-      if (e.target === lastTarget) {
+      if (e.target === lastTarget && searchBtn) {
         _toggleContent(searchBtn);
       }
       if (e.shiftKey && isSearchBtn) {
@@ -1003,9 +1006,9 @@ function webSearch() {
     } else if (e.code === 'Escape') {
       const checkDisplay = window.getComputedStyle(webSearch).display;
       if (checkDisplay === 'none') return;
-      if (window.outerWidth >= setRWDWidth && webSearchBtn) {
+      if (window.innerWidth >= setRWDWidth && webSearchBtn) {
         _toggleContent(webSearchBtn);
-      } else if (window.outerWidth < setRWDWidth && mobileSearchBtn) {
+      } else if (window.innerWidth < setRWDWidth && mobileSearchBtn) {
         _toggleContent(mobileSearchBtn);
       }
       _jsFadeOut(overlay);
@@ -1038,7 +1041,7 @@ window.addEventListener('load', () => webSearch());
 function sideNav(options) {
   // RWD切換判斷，與_variable.scss 的 --RWDWidth連動
   const setRWDWidth = parseInt(window.getComputedStyle(document.documentElement).getPropertyValue('--RWDWidth'));
-  const body = document.querySelector('body');
+  const body = document.body;
   const { showDefault = true, needLink = false, duration = 200, float = true } = options;
   const sideNav = document.querySelector('.sideNav');
   if (!sideNav) return;
@@ -1072,7 +1075,7 @@ function sideNav(options) {
       sideNavBtn.setAttribute('aria-expanded', checkDisplay ? 'false' : 'true');
       sideNavBtn.classList.toggle('active');
 
-      if (window.outerWidth <= setRWDWidth && float) {
+      if (window.innerWidth <= setRWDWidth && float) {
         sideNavBtn.style.transitionProperty = 'left';
         sideNavBtn.style.transitionDuration = `${duration}ms`;
         sideNavBtn.style.left = `${left}px`;
@@ -1125,9 +1128,9 @@ function sideNav(options) {
       }
     }
     function _transitionToggle() {
-      if ((window.outerWidth <= setRWDWidth && float) || window.outerWidth > setRWDWidth) {
+      if ((window.innerWidth <= setRWDWidth && float) || window.innerWidth > setRWDWidth) {
         _jsSlideToggleWidth(sideMenu, 200);
-      } else if (window.outerWidth <= setRWDWidth && !float) {
+      } else if (window.innerWidth <= setRWDWidth && !float) {
         _jsSlideToggle(sideMenu);
       }
     }
@@ -1209,7 +1212,7 @@ function sideNav(options) {
     });
   }
 
-  let checkRwd = window.outerWidth < setRWDWidth;
+  let checkRwd = window.innerWidth < setRWDWidth;
   // 鍵盤無障礙設定（僅限 RWD 狀態下有效）
   body.addEventListener('keydown', (e) => {
     if (checkRwd && sideNavBtn.getAttribute('aria-expanded') === 'true') {
@@ -1229,7 +1232,7 @@ function sideNav(options) {
 
   // 視窗載入與重置事件：調整響應式設定
   const _checkRwdFn = () => {
-    if (window.outerWidth <= setRWDWidth) {
+    if (window.innerWidth <= setRWDWidth) {
       checkRwd = true;
       sideNavBtn.classList.remove('active');
       sideNavBtn.setAttribute('aria-expanded', 'false');
@@ -1240,7 +1243,7 @@ function sideNav(options) {
       } else {
         _jsSlideUp(sideMenu);
       }
-    } else if (window.outerWidth > setRWDWidth && checkRwd === true) {
+    } else if (window.innerWidth > setRWDWidth && checkRwd === true) {
       checkRwd = false;
       sideNavBtn.classList.add('active');
       sideNavBtn.setAttribute('aria-expanded', 'true');
@@ -1442,7 +1445,7 @@ function tabFunction(obj) {
       value.setAttribute('aria-expanded', 'false');
     });
 
-    if (window.outerWidth < windowWidth && modeSwitch) {
+    if (window.innerWidth < windowWidth && modeSwitch) {
       //隱藏上方選單
       tabItems.style.display = 'none';
 
@@ -1479,7 +1482,7 @@ function tabFunction(obj) {
         // tabpanelBtn[nowOpen].focus();
         tabContentIn[nowOpen].removeAttribute('style');
       }
-    } else if (window.outerWidth >= windowWidth && modeSwitch) {
+    } else if (window.innerWidth >= windowWidth && modeSwitch) {
       //增加上方選單
       tabItems.removeAttribute('style');
       tabItems.setAttribute('role', 'tablist');
@@ -1870,7 +1873,7 @@ function swiperA11Fn(swiper) {
 }
 
 function swiperNavKeyDownFn(swiper, mainSwiper) {
-  const body = document.querySelector('body');
+  const body = document.body;
   if (!swiper) return;
   swiper.slides.forEach((elem, idx) => {
     elem.dataset.swiperSlideIndex = idx;
@@ -2070,7 +2073,7 @@ window.addEventListener('load', () => marquee());
 // -----------------------------------------------------------------------
 
 function a11yKeyCode() {
-  const body = document.querySelector('body');
+  const body = document.body;
   body.addEventListener('keydown', (e) => {
     switch (e.altKey && e.code) {
       case true && 'KeyU':

@@ -521,12 +521,21 @@ function webSearch() {
         'aria-haspopup': 'true',
       })
       .on('click', () => _toggleContent($mobileSearchBtn));
-  }
 
-  $webSearch.attr({
-    id: `${id}_con`,
-    'aria-labelledby': 'topSearchBtn mobileSearchBtn',
-  });
+    $webSearch.attr({
+      id: `${id}_con`,
+      'aria-labelledby': 'topSearchBtn mobileSearchBtn',
+    });
+
+    $(window).on('resize', function () {
+      if ($(window).width() > setRWDWidth) $webSearch.removeAttr('style');
+    });
+  } else {
+    $webSearch.attr({
+      id: `${id}_con`,
+      'aria-labelledby': 'mobileSearchBtn',
+    });
+  }
 
   function _toggleContent(elem) {
     const $elem = $(elem);
@@ -569,7 +578,7 @@ function webSearch() {
     const $lastTarget = $webSearchAllTarget.last();
 
     if (e.code === 'Tab') {
-      if ($(e.target).is($lastTarget)) {
+      if ($(e.target).is($lastTarget) && $searchBtn.length) {
         _toggleContent($searchBtn);
       }
       if (e.shiftKey && isSearchBtn) {
