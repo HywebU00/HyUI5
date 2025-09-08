@@ -306,8 +306,7 @@ function mainMenu(obj) {
       const $this = $(this);
       const $parentLi = $this.parent('li');
       const isHasSubmenu = $parentLi.hasClass('hasChild');
-      const $closestUl = $this.closest('ul');
-      const $lastTarget = $closestUl.find('a,button,input,textarea,select').last();
+      const $lastTarget = $this.parents('.hasChild').last();
 
       _checkBorder($parentLi);
 
