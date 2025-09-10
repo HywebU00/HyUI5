@@ -347,7 +347,7 @@ function mainMenu(obj) {
   function _initMobileMenu() {
     const $mobileMenu = $('<nav id="mobileMenu" aria-labelledby="mobileMainMenuBtn"></nav>');
     const $mobileMainMenuBox = $('<div class="mobileMainMenuBox"></div>');
-    const $mainMenuClone = $menu.clone().removeClass('mainMenu menu').addClass('mobileMainMenu');
+    const $mainMenuClone = $menu.clone().removeClass('mainMenu menu megaMenu').addClass('mobileMainMenu');
 
     const $topNav = $('.topNav');
     if ($topNav.length) {
