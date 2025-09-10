@@ -733,6 +733,7 @@ function mainMenu(obj) {
       const mainMenuClone = menu.cloneNode(true);
       mainMenuClone.classList.remove('mainMenu', 'menu');
       mainMenuClone.classList.add('mobileMainMenu');
+      mainMenuClone.classList.remove('megaMenu');
       // 將 主選單 加入到 手機版主選單
       mobileMainMenuBox.insertAdjacentElement('afterbegin', mainMenuClone);
 
