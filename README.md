@@ -1,6 +1,6 @@
 ## 關於此專案
 
-- HyUI 版本號: v5.0.4
+- HyUI 版本號: v5
 - 專案名稱: HyUI kit
 - UI 設計師: Miley [miley.ho@hyweb.com.tw](mailto:miley.ho@hyweb.com.tw)
 - 切版設計師: 祺學 [chimiao.tseng@hyweb.com.tw](chimiao.tseng@hyweb.com.tw)
